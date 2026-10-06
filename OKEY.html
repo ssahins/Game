@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Okey Skor Takip</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f4f7;
+            color: #222;
+        }
+
+        /* ŞİFRE EKRANI */
+        .login-screen {
+            position: fixed;
+            inset: 0;
+            background: #f2f4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 5px 25px rgba(0,0,0,.12);
+            text-align: center;
+        }
+
+        .login-box i {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .login-box h2 {
+            margin-bottom: 25px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 16px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: #198754;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-box button:hover {
+            background: #157347;
+        }
+
+        .login-error {
+            color: #dc3545;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        /* ANA SAYFA */
+        .container {
+            max-width: 1050px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .players {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .player {
+            text-align: center;
+            padding: 18px 10px;
+            background: #f7f7f7;
+            border-radius: 12px;
+        }
+
+        .player i {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .player h3 {
+            margin: 5px 0 15px;
+        }
+
+        .number {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .wins {
+            color: #198754;
+        }
+
+        .losses {
+            color: #dc3545;
+        }
+
+        .played {
+            margin-top: 8px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .percentage {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        .selection-title {
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .selection input {
+            display: none;
+        }
+
+        .selection label {
+            display: block;
+            text-align: center;
+            padding: 15px 8px;
+            border-radius: 10px;
+            background: #eee;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .selection input:checked + label {
+            background: #e8f7ee;
+            border-color: #198754;
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .selection input:disabled + label {
+            opacity: .35;
+            cursor: not-allowed;
+        }
+
+        .outside {
+            margin-top: 18px;
+            padding: 14px;
+            background: #f1f1f1;
+            border-radius: 9px;
+            text-align: center;
+        }
+
+        .save-btn {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            padding: 15px;
+            margin-top: 20px;
+            background: #198754;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #157347;
+        }
+
+        .leaders {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .leader {
+            text-align: center;
+            padding: 20px;
+            background: #f7f7f7;
+            border-radius: 12px;
+        }
+
+        .leader i {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .winner-text {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .loser-text {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .outside-text {
+            color: #777;
+            font-weight: bold;
+        }
+
+        .date {
+            color: #777;
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .delete-btn {
+            width: auto;
+            min-width: 45px;
+            padding: 10px 13px;
+            border: none;
+            border-radius: 8px;
+            background: #dc3545;
+            color: white;
+            cursor: pointer;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+
+        .total {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 800px) {
+            .players,
+            .selection-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .leaders {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+
+            .card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ŞİFRE EKRANI -->
+    <div class="login-screen" id="loginScreen">
+
+        <div class="login-box">
+
+            <i class="fa-solid fa-lock"></i>
+
+            <h2>Okey Skor Takip</h2>
+
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Şifreyi girin"
+                autocomplete="off"
+            >
+
+            <button onclick="login()">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Giriş Yap
+            </button>
+
+            <div class="login-error" id="loginError"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ANA SAYFA -->
+    <div class="container">
+
+        <h1>
+            <i class="fa-solid fa-chess-board"></i>
+            Okey Skor Takip
+        </h1>
+
+
+        <!-- GENEL DURUM -->
+        <div class="card">
+
+            <h2>
+                <i class="fa-solid fa-chart-simple"></i>
+                Genel Durum
+            </h2>
+
+            <div class="total">
+                Toplam Oyun:
+                <strong id="totalGames">0</strong>
+            </div>
+
+            <div class="players" id="players"></div>
+
+        </div>
+
+
+        <!-- LİDERLER -->
+        <div class="card">
+
+            <h2>
+                <i class="fa-solid fa-ranking-star"></i>
+                Liderler
+            </h2>
+
+            <div class="leaders">
+
+                <div class="leader">
+
+                    <i class="fa-solid fa-trophy"></i>
+
+                    <h3>En Çok Kazanan</h3>
+
+                    <strong id="topWinner">-</strong>
+
+                    <p id="topWinnerCount">0 galibiyet</p>
+
+                </div>
+
+
+                <div class="leader">
+
+                    <i class="fa-solid fa-skull-crossbones"></i>
+
+                    <h3>En Çok Kaybeden</h3>
+
+                    <strong id="topLoser">-</strong>
+
+                    <p id="topLoserCount">0 mağlubiyet</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- YENİ OYUN -->
+        <div class="card">
+
+            <h2>
+                <i class="fa-solid fa-plus"></i>
+                Yeni Oyun
+            </h2>
+
+
+            <h3 class="selection-title">
+                <i class="fa-solid fa-trophy"></i>
+                Kazananlar <small>(2 kişi)</small>
+            </h3>
+
+            <div class="selection-grid" id="winnerSelection"></div>
+
+
+            <h3 class="selection-title">
+                <i class="fa-solid fa-circle-xmark"></i>
+                Kaybedenler <small>(2 kişi)</small>
+            </h3>
+
+            <div class="selection-grid" id="loserSelection"></div>
+
+
+            <div class="outside">
+
+                <i class="fa-solid fa-chair"></i>
+
+                Oynamayan:
+
+                <strong id="outsidePlayer">-</strong>
+
+            </div>
+
+
+            <button class="save-btn" id="saveButton">
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                Oyunu Kaydet
+
+            </button>
+
+
+            <div class="message" id="message"></div>
+
+        </div>
+
+
+        <!-- OYUN GEÇMİŞİ -->
+        <div class="card">
+
+            <h2>
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Oyun Geçmişi
+            </h2>
+
+            <div id="history"></div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* =====================================
+           OYUNCULAR
+        ===================================== */
+
+        const players = [
+            "Şahin",
+            "Emircan",
+            "Taha",
+            "Tolga",
+            "Suat"
+        ];
+
+
+        /* =====================================
+           ŞİFRE
+        ===================================== */
+
+        const correctPassword = "Okey bağımlıları";
+
+
+        function login() {
+
+            const password =
+                document.getElementById("passwordInput").value;
+
+            const error =
+                document.getElementById("loginError");
+
+
+            if (password === correctPassword) {
+
+                document.getElementById("loginScreen")
+                    .style.display = "none";
+
+                error.textContent = "";
+
+            } else {
+
+                error.textContent = "❌ Şifre yanlış!";
+
+                document.getElementById("passwordInput")
+                    .value = "";
+
+            }
+
+        }
+
+
+        /* ENTER İLE GİRİŞ */
+
+        document
+            .getElementById("passwordInput")
+            .addEventListener("keydown", function(event) {
+
+                if (event.key === "Enter") {
+                    login();
+                }
+
+            });
+
+
+        /* =====================================
+           OYUNCULARI OLUŞTUR
+        ===================================== */
+
+        const winnerSelection =
+            document.getElementById("winnerSelection");
+
+        const loserSelection =
+            document.getElementById("loserSelection");
+
+
+        players.forEach((player, index) => {
+
+            winnerSelection.innerHTML += `
+
+                <div class="selection">
+
+                    <input
+                        type="checkbox"
+                        class="winner"
+                        value="${player}"
+                        id="winner-${index}"
+                    >
+
+                    <label for="winner-${index}">
+
+                        <i class="fa-solid fa-trophy"></i>
+                        <br>
+
+                        ${player}
+
+                    </label>
+
+                </div>
+
+            `;
+
+
+            loserSelection.innerHTML += `
+
+                <div class="selection">
+
+                    <input
+                        type="checkbox"
+                        class="loser"
+                        value="${player}"
+                        id="loser-${index}"
+                    >
+
+                    <label for="loser-${index}">
+
+                        <i class="fa-solid fa-xmark"></i>
+                        <br>
+
+                        ${player}
+
+                    </label>
+
+                </div>
+
+            `;
+
+        });
+
+
+        /* =====================================
+           LOCAL STORAGE
+        ===================================== */
+
+        let games = [];
+
+        try {
+
+            const saved =
+                JSON.parse(
+                    localStorage.getItem("okeyGames")
+                );
+
+
+            if (Array.isArray(saved)) {
+
+                games = saved.filter(game =>
+
+                    game &&
+                    Array.isArray(game.winners) &&
+                    Array.isArray(game.losers) &&
+                    typeof game.outside === "string" &&
+                    typeof game.date === "string"
+
+                );
+
+            }
+
+        } catch (error) {
+
+            games = [];
+
+        }
+
+
+        /* =====================================
+           CHECKBOX'LAR
+        ===================================== */
+
+        const winnerCheckboxes =
+            document.querySelectorAll(".winner");
+
+        const loserCheckboxes =
+            document.querySelectorAll(".loser");
+
+
+        /* =====================================
+           SEÇİLENLERİ BUL
+        ===================================== */
+
+        function getSelected(elements) {
+
+            return Array.from(elements)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+        }
+
+
+        /* =====================================
+           SEÇİM KONTROLÜ
+        ===================================== */
+
+        function updateSelection() {
+
+            const winners =
+                getSelected(winnerCheckboxes);
+
+            const losers =
+                getSelected(loserCheckboxes);
+
+
+            winnerCheckboxes.forEach(cb => {
+
+                cb.disabled =
+                    losers.includes(cb.value) ||
+                    (
+                        winners.length >= 2 &&
+                        !cb.checked
+                    );
+
+            });
+
+
+            loserCheckboxes.forEach(cb => {
+
+                cb.disabled =
+                    winners.includes(cb.value) ||
+                    (
+                        losers.length >= 2 &&
+                        !cb.checked
+                    );
+
+            });
+
+
+            const playing = [
+                ...winners,
+                ...losers
+            ];
+
+
+            const outside =
+                players.filter(
+                    player => !playing.includes(player)
+                );
+
+
+            document.getElementById("outsidePlayer")
+                .textContent =
+                outside.length === 1
+                    ? outside[0]
+                    : "-";
+
+        }
+
+
+        /* =====================================
+           CHECKBOX EVENTLERİ
+        ===================================== */
+
+        winnerCheckboxes.forEach(cb => {
+
+            cb.addEventListener(
+                "change",
+                updateSelection
+            );
+
+        });
+
+
+        loserCheckboxes.forEach(cb => {
+
+            cb.addEventListener(
+                "change",
+                updateSelection
+            );
+
+        });
+
+
+        /* =====================================
+           OYUN KAYDET
+        ===================================== */
+
+        document
+            .getElementById("saveButton")
+            .addEventListener("click", saveGame);
+
+
+        function saveGame() {
+
+            const winners =
+                getSelected(winnerCheckboxes);
+
+            const losers =
+                getSelected(loserCheckboxes);
+
+
+            if (winners.length !== 2) {
+
+                showMessage(
+                    "❗ Tam olarak 2 kazanan seçmelisin.",
+                    "#dc3545"
+                );
+
+                return;
+
+            }
+
+
+            if (losers.length !== 2) {
+
+                showMessage(
+                    "❗ Tam olarak 2 kaybeden seçmelisin.",
+                    "#dc3545"
+                );
+
+                return;
+
+            }
+
+
+            const allPlayers = [
+                ...winners,
+                ...losers
+            ];
+
+
+            if (new Set(allPlayers).size !== 4) {
+
+                showMessage(
+                    "❗ Aynı kişi hem kazanamaz hem kaybedemez.",
+                    "#dc3545"
+                );
+
+                return;
+
+            }
+
+
+            const outside =
+                players.find(
+                    player => !allPlayers.includes(player)
+                );
+
+
+            const now = new Date();
+
+
+            const date =
+                now.toLocaleDateString("tr-TR") +
+                " " +
+                now.toLocaleTimeString("tr-TR", {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+
+            const game = {
+
+                id: Date.now(),
+
+                winners: [...winners],
+
+                losers: [...losers],
+
+                outside: outside,
+
+                date: date
+
+            };
+
+
+            games.push(game);
+
+
+            try {
+
+                localStorage.setItem(
+                    "okeyGames",
+                    JSON.stringify(games)
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    "❌ Kayıt sırasında hata oluştu.",
+                    "#dc3545"
+                );
+
+                return;
+
+            }
+
+
+            clearForm();
+
+            updatePage();
+
+
+            showMessage(
+                "✅ Oyun başarıyla kaydedildi!",
+                "#198754"
+            );
+
+        }
+
+
+        /* =====================================
+           FORMU TEMİZLE
+        ===================================== */
+
+        function clearForm() {
+
+            winnerCheckboxes.forEach(cb => {
+
+                cb.checked = false;
+                cb.disabled = false;
+
+            });
+
+
+            loserCheckboxes.forEach(cb => {
+
+                cb.checked = false;
+                cb.disabled = false;
+
+            });
+
+
+            updateSelection();
+
+        }
+
+
+        /* =====================================
+           MESAJ
+        ===================================== */
+
+        function showMessage(text, color) {
+
+            const message =
+                document.getElementById("message");
+
+
+            message.textContent = text;
+
+            message.style.color = color;
+
+
+            setTimeout(() => {
+
+                message.textContent = "";
+
+            }, 2500);
+
+        }
+
+
+        /* =====================================
+           OYUN SİL
+        ===================================== */
+
+        function deleteGame(id) {
+
+            if (
+                !confirm(
+                    "Bu oyunu silmek istediğine emin misin?"
+                )
+            ) {
+                return;
+            }
+
+
+            games =
+                games.filter(
+                    game => game.id !== id
+                );
+
+
+            localStorage.setItem(
+                "okeyGames",
+                JSON.stringify(games)
+            );
+
+
+            updatePage();
+
+        }
+
+
+        /* =====================================
+           SAYFAYI GÜNCELLE
+        ===================================== */
+
+        function updatePage() {
+
+            const stats = {};
+
+
+            players.forEach(player => {
+
+                stats[player] = {
+
+                    wins: 0,
+
+                    losses: 0
+
+                };
+
+            });
+
+
+            /* İSTATİSTİKLERİ HESAPLA */
+
+            games.forEach(game => {
+
+                game.winners.forEach(player => {
+
+                    if (stats[player]) {
+
+                        stats[player].wins++;
+
+                    }
+
+                });
+
+
+                game.losers.forEach(player => {
+
+                    if (stats[player]) {
+
+                        stats[player].losses++;
+
+                    }
+
+                });
+
+            });
+
+
+            /* TOPLAM OYUN */
+
+            document.getElementById("totalGames")
+                .textContent = games.length;
+
+
+            /* OYUNCU KARTLARI */
+
+            const playersDiv =
+                document.getElementById("players");
+
+
+            playersDiv.innerHTML = "";
+
+
+            players.forEach(player => {
+
+                const wins =
+                    stats[player].wins;
+
+                const losses =
+                    stats[player].losses;
+
+                const played =
+                    wins + losses;
+
+
+                const percentage =
+                    played === 0
+                        ? 0
+                        : Math.round(
+                            (wins / played) * 100
+                        );
+
+
+                playersDiv.innerHTML += `
+
+                    <div class="player">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        <h3>${player}</h3>
+
+                        <div class="number wins">
+                            ${wins}
+                        </div>
+
+                        <small>Galibiyet</small>
+
+                        <br><br>
+
+                        <div class="number losses">
+                            ${losses}
+                        </div>
+
+                        <small>Mağlubiyet</small>
+
+                        <div class="played">
+                            ${played} oyun
+                        </div>
+
+                        <div class="percentage">
+                            %${percentage} kazanma
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+
+            /* EN ÇOK KAZANAN */
+
+            const maxWins =
+                Math.max(
+                    ...players.map(
+                        player => stats[player].wins
+                    )
+                );
+
+
+            const topWinners =
+                players.filter(
+                    player =>
+                        stats[player].wins === maxWins
+                );
+
+
+            document.getElementById("topWinner")
+                .textContent =
+                maxWins > 0
+                    ? topWinners.join(" + ")
+                    : "-";
+
+
+            document.getElementById("topWinnerCount")
+                .textContent =
+                maxWins > 0
+                    ? `${maxWins} galibiyet`
+                    : "0 galibiyet";
+
+
+            /* EN ÇOK KAYBEDEN */
+
+            const maxLosses =
+                Math.max(
+                    ...players.map(
+                        player => stats[player].losses
+                    )
+                );
+
+
+            const topLosers =
+                players.filter(
+                    player =>
+                        stats[player].losses === maxLosses
+                );
+
+
+            document.getElementById("topLoser")
+                .textContent =
+                maxLosses > 0
+                    ? topLosers.join(" + ")
+                    : "-";
+
+
+            document.getElementById("topLoserCount")
+                .textContent =
+                maxLosses > 0
+                    ? `${maxLosses} mağlubiyet`
+                    : "0 mağlubiyet";
+
+
+            /* GEÇMİŞİ GÖSTER */
+
+            renderHistory();
+
+        }
+
+
+        /* =====================================
+           OYUN GEÇMİŞİ
+        ===================================== */
+
+        function renderHistory() {
+
+            const history =
+                document.getElementById("history");
+
+
+            if (games.length === 0) {
+
+                history.innerHTML = `
+
+                    <div class="empty">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        Henüz oyun kaydı yok.
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            history.innerHTML = "";
+
+
+            games
+                .slice()
+                .reverse()
+                .forEach(game => {
+
+                    history.innerHTML += `
+
+                        <div class="history-item">
+
+                            <div>
+
+                                <div>
+
+                                    <i class="fa-solid fa-trophy"></i>
+
+                                    Kazanan:
+
+                                    <span class="winner-text">
+
+                                        ${game.winners.join(" + ")}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div style="margin-top:7px;">
+
+                                    <i class="fa-solid fa-xmark"></i>
+
+                                    Kaybeden:
+
+                                    <span class="loser-text">
+
+                                        ${game.losers.join(" + ")}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div style="margin-top:7px;">
+
+                                    <i class="fa-solid fa-chair"></i>
+
+                                    Oynamadı:
+
+                                    <span class="outside-text">
+
+                                        ${game.outside}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div class="date">
+
+                                    <i class="fa-regular fa-calendar"></i>
+
+                                    ${game.date}
+
+                                </div>
+
+                            </div>
+
+
+                            <button
+                                class="delete-btn"
+                                onclick="deleteGame(${game.id})"
+                            >
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                    `;
+
+                });
+
+        }
+
+
+        /* =====================================
+           SAYFA BAŞLANGICI
+        ===================================== */
+
+        updateSelection();
+
+        updatePage();
+
+    </script>
+
+</body>
+</html>
