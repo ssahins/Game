@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <title>Okey Skor Takip</title>
 
@@ -14,81 +14,119 @@
     <style>
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            width: 100%;
+            overflow-x: hidden;
         }
 
         body {
             margin: 0;
+            width: 100%;
+            min-height: 100vh;
             font-family: Arial, sans-serif;
-            background: #f2f4f7;
             color: #222;
+
+            background:
+                linear-gradient(
+                    rgba(0,0,0,.35),
+                    rgba(0,0,0,.35)
+                ),
+                url("okey.jpeg") center / cover no-repeat fixed;
         }
 
-        body {
-    background-image: url("arkaplan.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-} 
+        /* =====================================
+           ŞİFRE EKRANI
+        ===================================== */
 
-body {
-    background: url("/okey.jpeg") center / cover no-repeat fixed;
-}
-
-        /* ŞİFRE EKRANI */
         .login-screen {
             position: fixed;
             inset: 0;
-            background: #f2f4f7;
+            width: 100%;
+            min-height: 100dvh;
+
+            background:
+                linear-gradient(
+                    rgba(0,0,0,.45),
+                    rgba(0,0,0,.45)
+                ),
+                url("okey.jpeg") center / cover no-repeat;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
+            padding: 20px;
+
             z-index: 9999;
         }
 
         .login-box {
-            background: white;
-            width: 90%;
+            background: rgba(255,255,255,.97);
+            width: 100%;
             max-width: 400px;
-            padding: 35px;
-            border-radius: 18px;
-            box-shadow: 0 5px 25px rgba(0,0,0,.12);
+
+            padding: 30px 24px;
+            border-radius: 20px;
+
+            box-shadow: 0 10px 35px rgba(0,0,0,.25);
+
             text-align: center;
         }
 
         .login-box i {
-            font-size: 50px;
-            margin-bottom: 15px;
+            font-size: 48px;
+            margin-bottom: 12px;
         }
 
         .login-box h2 {
-            margin-bottom: 25px;
+            margin: 5px 0 25px;
+            font-size: 24px;
         }
 
         .login-box input {
             width: 100%;
+            min-height: 52px;
+
             padding: 14px;
+
             border: 1px solid #ddd;
-            border-radius: 9px;
+            border-radius: 10px;
+
             font-size: 16px;
+
             margin-bottom: 12px;
+
             outline: none;
+        }
+
+        .login-box input:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 3px rgba(25,135,84,.12);
         }
 
         .login-box button {
             width: 100%;
+            min-height: 52px;
+
             padding: 14px;
+
             border: none;
-            border-radius: 9px;
+            border-radius: 10px;
+
             background: #198754;
             color: white;
+
             font-size: 16px;
             font-weight: bold;
+
             cursor: pointer;
         }
 
-        .login-box button:hover {
-            background: #157347;
+        .login-box button:active {
+            transform: scale(.98);
         }
 
         .login-error {
@@ -97,54 +135,115 @@ body {
             font-weight: bold;
         }
 
-        /* ANA SAYFA */
+
+        /* =====================================
+           ANA SAYFA
+        ===================================== */
+
         .container {
+            width: 100%;
             max-width: 1050px;
-            margin: 30px auto;
-            padding: 20px;
+
+            margin: 0 auto;
+
+            padding: 25px 20px 40px;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 30px;
+
+            margin: 10px 0 25px;
+
+            color: white;
+
+            font-size: 32px;
+
+            text-shadow: 0 2px 6px rgba(0,0,0,.5);
         }
 
+
+        /* =====================================
+           KARTLAR
+        ===================================== */
+
         .card {
-            background: white;
+            width: 100%;
+
+            background: rgba(255,255,255,.96);
+
             padding: 25px;
+
             margin-bottom: 20px;
+
             border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,.08);
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,.15);
         }
 
         .card h2 {
             margin-top: 0;
+            margin-bottom: 20px;
+
+            font-size: 22px;
+        }
+
+
+        /* =====================================
+           GENEL DURUM
+        ===================================== */
+
+        .total {
+            text-align: center;
+
+            color: #666;
+
+            margin-bottom: 20px;
+
+            font-size: 15px;
         }
 
         .players {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+
+            grid-template-columns:
+                repeat(5, minmax(0, 1fr));
+
             gap: 12px;
         }
 
         .player {
+            min-width: 0;
+
             text-align: center;
-            padding: 18px 10px;
+
+            padding: 18px 8px;
+
             background: #f7f7f7;
+
             border-radius: 12px;
+
+            overflow: hidden;
         }
 
         .player i {
             font-size: 26px;
+
             margin-bottom: 8px;
         }
 
         .player h3 {
             margin: 5px 0 15px;
+
+            font-size: 16px;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .number {
-            font-size: 28px;
+            font-size: 27px;
             font-weight: bold;
         }
 
@@ -158,24 +257,83 @@ body {
 
         .played {
             margin-top: 8px;
+
             color: #666;
+
             font-size: 13px;
         }
 
         .percentage {
             margin-top: 5px;
+
             font-weight: bold;
+
+            font-size: 13px;
         }
+
+
+        /* =====================================
+           LİDERLER
+        ===================================== */
+
+        .leaders {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 15px;
+        }
+
+        .leader {
+            text-align: center;
+
+            padding: 20px;
+
+            background: #f7f7f7;
+
+            border-radius: 12px;
+
+            min-width: 0;
+        }
+
+        .leader i {
+            font-size: 30px;
+
+            margin-bottom: 10px;
+        }
+
+        .leader h3 {
+            font-size: 17px;
+        }
+
+        .leader strong {
+            word-break: break-word;
+        }
+
+
+        /* =====================================
+           YENİ OYUN
+        ===================================== */
 
         .selection-title {
             margin-top: 25px;
             margin-bottom: 12px;
+
+            font-size: 17px;
         }
 
         .selection-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+
+            grid-template-columns:
+                repeat(5, minmax(0, 1fr));
+
             gap: 10px;
+        }
+
+        .selection {
+            min-width: 0;
         }
 
         .selection input {
@@ -183,156 +341,431 @@ body {
         }
 
         .selection label {
-            display: block;
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 75px;
+
             text-align: center;
-            padding: 15px 8px;
+
+            padding: 12px 5px;
+
             border-radius: 10px;
+
             background: #eee;
+
             cursor: pointer;
+
             border: 2px solid transparent;
+
+            font-size: 14px;
+
+            transition: .15s;
+        }
+
+        .selection label i {
+            font-size: 20px;
+
+            margin-bottom: 5px;
         }
 
         .selection input:checked + label {
             background: #e8f7ee;
+
             border-color: #198754;
+
             color: #198754;
+
             font-weight: bold;
         }
 
         .selection input:disabled + label {
             opacity: .35;
+
             cursor: not-allowed;
         }
 
+
+        /* =====================================
+           OYNAMAYAN
+        ===================================== */
+
         .outside {
             margin-top: 18px;
-            padding: 14px;
+
+            padding: 15px;
+
             background: #f1f1f1;
+
             border-radius: 9px;
+
             text-align: center;
+
+            font-size: 15px;
         }
+
+
+        /* =====================================
+           KAYDET BUTONU
+        ===================================== */
 
         .save-btn {
             width: 100%;
+
+            min-height: 52px;
+
             border: none;
-            border-radius: 9px;
+
+            border-radius: 10px;
+
             padding: 15px;
+
             margin-top: 20px;
+
             background: #198754;
+
             color: white;
+
             font-size: 17px;
+
             font-weight: bold;
+
             cursor: pointer;
+
+            transition: .15s;
         }
 
-        .save-btn:hover {
-            background: #157347;
+        .save-btn:active {
+            transform: scale(.98);
         }
 
-        .leaders {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
 
-        .leader {
+        /* =====================================
+           MESAJ
+        ===================================== */
+
+        .message {
             text-align: center;
-            padding: 20px;
-            background: #f7f7f7;
-            border-radius: 12px;
+
+            margin-top: 15px;
+
+            font-weight: bold;
+
+            font-size: 14px;
         }
 
-        .leader i {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
+
+        /* =====================================
+           GEÇMİŞ
+        ===================================== */
 
         .history-item {
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
             gap: 15px;
+
             padding: 15px 5px;
+
             border-bottom: 1px solid #ddd;
+        }
+
+        .history-item > div:first-child {
+            min-width: 0;
+
+            flex: 1;
         }
 
         .winner-text {
             color: #198754;
+
             font-weight: bold;
+
+            word-break: break-word;
         }
 
         .loser-text {
             color: #dc3545;
+
             font-weight: bold;
+
+            word-break: break-word;
         }
 
         .outside-text {
             color: #777;
+
             font-weight: bold;
         }
 
         .date {
             color: #777;
+
             font-size: 13px;
+
             margin-top: 7px;
         }
 
         .delete-btn {
-            width: auto;
-            min-width: 45px;
-            padding: 10px 13px;
+            flex-shrink: 0;
+
+            width: 45px;
+            height: 45px;
+
+            padding: 0;
+
             border: none;
+
             border-radius: 8px;
+
             background: #dc3545;
+
             color: white;
+
             cursor: pointer;
         }
 
         .empty {
             text-align: center;
+
             color: #777;
+
             padding: 20px;
         }
 
-        .total {
-            text-align: center;
-            color: #666;
-            margin-bottom: 20px;
-        }
 
-        .message {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+        /* =====================================
+           TABLET
+        ===================================== */
 
         @media (max-width: 800px) {
-            .players,
+
+            .players {
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+            }
+
             .selection-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+            }
+
+        }
+
+
+        /* =====================================
+           TELEFON
+        ===================================== */
+
+        @media (max-width: 600px) {
+
+            body {
+                background-attachment: scroll;
+            }
+
+            .container {
+                padding: 12px 10px 30px;
+            }
+
+            h1 {
+                font-size: 25px;
+
+                margin: 8px 0 18px;
+            }
+
+            .card {
+                padding: 17px 14px;
+
+                margin-bottom: 14px;
+
+                border-radius: 14px;
+            }
+
+            .card h2 {
+                font-size: 19px;
+
+                margin-bottom: 16px;
+            }
+
+            .players {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+                gap: 9px;
+            }
+
+            .player {
+                padding: 15px 7px;
+            }
+
+            .player i {
+                font-size: 22px;
+            }
+
+            .player h3 {
+                font-size: 15px;
+
+                margin-bottom: 12px;
+            }
+
+            .number {
+                font-size: 25px;
+            }
+
+            .played,
+            .percentage {
+                font-size: 12px;
             }
 
             .leaders {
                 grid-template-columns: 1fr;
+
+                gap: 10px;
             }
+
+            .leader {
+                padding: 17px;
+            }
+
+            .selection-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+                gap: 9px;
+            }
+
+            .selection label {
+                min-height: 70px;
+
+                font-size: 14px;
+            }
+
+            .selection label i {
+                font-size: 19px;
+            }
+
+            .selection-title {
+                font-size: 16px;
+
+                margin-top: 20px;
+            }
+
+            .outside {
+                font-size: 14px;
+
+                padding: 14px 8px;
+            }
+
+            .save-btn {
+                min-height: 54px;
+
+                font-size: 16px;
+            }
+
+            .history-item {
+                align-items: flex-start;
+
+                gap: 8px;
+
+                padding: 14px 0;
+            }
+
+            .history-item > div:first-child {
+                font-size: 14px;
+
+                line-height: 1.5;
+            }
+
+            .date {
+                font-size: 12px;
+            }
+
+            .delete-btn {
+                width: 42px;
+                height: 42px;
+            }
+
+            .login-box {
+                padding: 27px 20px;
+            }
+
         }
 
-        @media (max-width: 500px) {
+
+        /* =====================================
+           KÜÇÜK TELEFON
+        ===================================== */
+
+        @media (max-width: 380px) {
+
             .container {
-                padding: 10px;
-                margin: 10px auto;
+                padding-left: 7px;
+                padding-right: 7px;
             }
 
             .card {
-                padding: 18px;
+                padding: 15px 11px;
             }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .player {
+                padding: 13px 5px;
+            }
+
+            .player h3 {
+                font-size: 14px;
+            }
+
+            .number {
+                font-size: 23px;
+            }
+
+            .selection label {
+                min-height: 66px;
+
+                font-size: 13px;
+            }
+
         }
+
+
+        /* =====================================
+           YATAY TELEFON
+        ===================================== */
+
+        @media (max-height: 500px) and (orientation: landscape) {
+
+            .login-screen {
+                align-items: flex-start;
+
+                overflow-y: auto;
+
+                padding: 15px;
+            }
+
+            .login-box {
+                margin: auto;
+            }
+
+        }
+
     </style>
 </head>
 
 <body>
 
     <!-- ŞİFRE EKRANI -->
+
     <div class="login-screen" id="loginScreen">
 
         <div class="login-box">
@@ -361,6 +794,7 @@ body {
 
 
     <!-- ANA SAYFA -->
+
     <div class="container">
 
         <h1>
@@ -370,6 +804,7 @@ body {
 
 
         <!-- GENEL DURUM -->
+
         <div class="card">
 
             <h2>
@@ -388,6 +823,7 @@ body {
 
 
         <!-- LİDERLER -->
+
         <div class="card">
 
             <h2>
@@ -428,6 +864,7 @@ body {
 
 
         <!-- YENİ OYUN -->
+
         <div class="card">
 
             <h2>
@@ -478,6 +915,7 @@ body {
 
 
         <!-- OYUN GEÇMİŞİ -->
+
         <div class="card">
 
             <h2>
@@ -582,7 +1020,6 @@ body {
                     <label for="winner-${index}">
 
                         <i class="fa-solid fa-trophy"></i>
-                        <br>
 
                         ${player}
 
@@ -607,7 +1044,6 @@ body {
                     <label for="loser-${index}">
 
                         <i class="fa-solid fa-xmark"></i>
-                        <br>
 
                         ${player}
 
